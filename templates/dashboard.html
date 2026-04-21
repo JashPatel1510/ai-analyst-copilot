@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>AI Analyst Copilot</title>
+
+        <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+ 
+        body {
+            background: #f3f6fb;
+            font-family: 'Inter', sans-serif;
+            color: #1a1a2e;
+            min-height: 100vh;
+        }
+ 
+        /* NAV */
+        nav {
+            background: #fff;
+            border-bottom: 1px solid #e5eaf2;
+            padding: 0 40px;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            position: sticky;
+        }
+        .nav-brand {
+            font-size: 30px;
+            font-weight: 700;
+            color: #1a1a2e;
+        }
+        .nav-brand span { color: #0073e6; }
+ 
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            position: absolute;
+            right: 40px;
+        }
+        .status-badge {
+            font-size: 12px;
+            font-weight: 500;
+            color: #16a34a;
+            background: #f0fdf4;
+            border: 1px solid #bbf7d0;
+            border-radius: 20px;
+            padding: 4px 12px;
+        }
+        .back-btn {
+            font-size: 13px;
+            font-weight: 500;
+            color: #6b7a99;
+            text-decoration: none;
+            border: 1px solid #e5eaf2;
+            border-radius: 6px;
+            padding: 6px 14px;
+            transition: border-color 0.2s, color 0.2s;
+        }
+        .back-btn:hover { border-color: #0073e6; color: #0073e6; }
+ 
+        /* PAGE */
+        .page {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 40px 24px 80px;
+        }
+ 
+        /* PAGE HEADER */
+        .page-header {
+            margin-bottom: 36px;
+        }
+        .page-header h1 {
+            font-size: 26px;
+            font-weight: 700;
+            color: #1a1a2e;
+        }
+        .page-header p {
+            font-size: 13px;
+            color: #6b7a99;
+            margin-top: 4px;
+        }
+ 
+        /* SECTION LABEL */
+        .sec-label {
+            font-size: 11px;
+            font-weight: 600;
+            color: #9aa5be;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            margin-bottom: 12px;
+        }
+ 
+        /* CARD */
+        .card {
+            background: #fff;
+            border: 1px solid #e5eaf2;
+            border-radius: 12px;
+            padding: 28px;
+            margin-bottom: 24px;
+            box-shadow: 0 1px 6px rgba(0,0,0,0.05);
+        }
+ 
+        .card h2 {
+            font-size: 15px;
+            font-weight: 700;
+            color: #1a1a2e;
+            margin-bottom: 20px;
+            padding-bottom: 14px;
+            border-bottom: 1px solid #f0f3f8;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+ 
+        /* SUMMARY */
+        .summary-content { font-size: 13px; color: #374151; line-height: 1.7; }
+        .summary-content table { width: 100%; border-collapse: collapse; font-size: 13px; }
+        .summary-content th {
+            background: #f3f6fb;
+            color: #6b7a99;
+            font-weight: 600;
+            padding: 10px 14px;
+            text-align: left;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .summary-content td {
+            padding: 10px 14px;
+            border-bottom: 1px solid #f0f3f8;
+            color: #374151;
+        }
+        .summary-content tr:last-child td { border-bottom: none; }
+        .summary-content tr:hover td { background: #f8faff; }
+ 
+        /* PLOTS */
+        .plots-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 16px;
+        }
+        .plot-item {
+            border: 1px solid #e5eaf2;
+            border-radius: 8px;
+            overflow: hidden;
+            background: #f8faff;
+            transition: box-shadow 0.2s;
+        }
+        .plot-item:hover { box-shadow: 0 4px 16px rgba(0,0,0,0.08); }
+        .plot-item img { width: 100%; display: block; }
+ 
+        /* INSIGHTS */
+        .insights-list { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+        .insights-list li {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            padding: 12px 16px;
+            background: #f8faff;
+            border: 1px solid #e5eaf2;
+            border-left: 3px solid #0073e6;
+            border-radius: 0 8px 8px 0;
+            font-size: 13px;
+            color: #374151;
+            line-height: 1.6;
+        }
+        .insights-list li::before {
+            content: '→';
+            color: #0073e6;
+            font-weight: 600;
+            flex-shrink: 0;
+        }
+ 
+        /* MODEL */
+        .model-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+        }
+ 
+        .stat-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 16px;
+            background: #f8faff;
+            border: 1px solid #e5eaf2;
+            border-radius: 8px;
+            margin-bottom: 10px;
+        }
+        .stat-key { font-size: 12px; color: #9aa5be; font-weight: 500; text-transform: uppercase; letter-spacing: 0.5px; }
+        .stat-val { font-size: 14px; font-weight: 700; color: #1a1a2e; }
+        .stat-val.score { color: #0073e6; font-size: 18px; }
+ 
+        .feat-label { font-size: 12px; font-weight: 600; color: #6b7a99; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 14px; }
+        .feat-list { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+        .feat-list li { display: flex; align-items: center; gap: 10px; }
+        .feat-name { font-size: 13px; color: #374151; min-width: 110px; }
+        .feat-bar-wrap { flex: 1; height: 6px; background: #e5eaf2; border-radius: 4px; overflow: hidden; }
+        .feat-bar { height: 100%; background: #0073e6; border-radius: 4px; }
+        .feat-val { font-size: 12px; color: #0073e6; font-weight: 600; min-width: 40px; text-align: right; }
+ 
+        /* FORM */
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+        .form-group { display: flex; flex-direction: column; gap: 6px; }
+        .form-group label { font-size: 12px; font-weight: 600; color: #6b7a99; }
+        .form-group input {
+            padding: 10px 12px;
+            border: 1px solid #e5eaf2;
+            border-radius: 7px;
+            font-family: 'Inter', sans-serif;
+            font-size: 13px;
+            color: #1a1a2e;
+            outline: none;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+        .form-group input:focus {
+            border-color: #0073e6;
+            box-shadow: 0 0 0 3px rgba(0,115,230,0.1);
+        }
+ 
+        .predict-btn {
+            padding: 12px 32px;
+            background: #0073e6;
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-family: 'Inter', sans-serif;
+            font-size: 14px;
+            font-weight: 600;
+            transition: background 0.2s, box-shadow 0.2s;
+        }
+        .predict-btn:hover {
+            background: #005fcc;
+            box-shadow: 0 4px 16px rgba(0,115,230,0.25);
+        }
+    </style>
+
+    <!--
+    <style>
+        body {
+            font-family: Arial;
+            margin: 40px;
+            background: #f5f5f5;
+        }
+        h1 {
+            color: #333;
+        }
+        .card {
+            background: white;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        img {
+            max-width: 500px;
+            margin-bottom: 10px;
+        }
+        input {
+            padding: 8px;
+            width: 200px;
+        }
+        button {
+            padding: 10px 20px;
+            background: black;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+    </style>
+
+    -->
+</head>
+
+<!--
+<body>
+
+<h1>AI Data Analyst Copilot</h1>
+
+<div class="card">
+    <h2>Data Summary</h2>
+    {{ summary | safe }}
+</div>
+
+<div class="card">
+    <h2>Visualizations</h2>
+    {% for plot in plots %}
+        <img src="{{ plot }}"><br>
+    {% endfor %}
+</div>
+
+<div class="card">
+    <h2>Insights</h2>
+    <ul>
+        {% for insight in insights %}
+            <li>{{ insight }}</li>
+        {% endfor %}
+    </ul>
+</div>
+
+<div class="card">
+    <h2>Model Results</h2>
+    <p><b>Type:</b> {{ model_result.type }}</p>
+    <p><b>Target:</b> {{ model_result.target }}</p>
+    <p><b>Score:</b> {{ model_result.score }}</p>
+
+    <h3>Top Features</h3>
+    <ul>
+        {% for f,v in model_result.importance %}
+            <li>{{ f }} : {{ v }}</li>
+        {% endfor %}
+    </ul>
+</div>
+
+<div class="card">
+    <h2>Make Prediction</h2>
+
+    <form action="/predict" method="POST">
+        {% for feature in model_result.features %}
+            <label>{{ feature }}</label><br>
+            <input type="text" name="{{ feature }}"><br><br>
+        {% endfor %}
+        <button type="submit">Predict</button>
+    </form>
+</div>
+
+</body>
+-->
+
+
+<body>
+ 
+<!-- NAV -->
+<nav>
+    <div class="nav-brand"><span>AI</span> Analyst Copilot</div>
+    <div class="nav-right">
+        <span class="status-badge">✓ Analysis Complete</span>
+        <a href="/" class="back-btn">← New Upload</a>
+    </div>
+</nav>
+ 
+<div class="page">
+ 
+    <!-- Header -->
+    <div class="page-header">
+        <h1>Dashboard</h1>
+        <p>Your dataset has been analysed. Review the results below.</p>
+    </div>
+ 
+    <!-- 1. Summary -->
+    <div class="sec-label">Data Summary</div>
+    <div class="card">
+        <h2>📊 Dataset Overview</h2>
+        <div class="summary-content">{{ summary | safe }}</div>
+    </div>
+ 
+    <!-- 2. Visualizations -->
+    <div class="sec-label">Visualizations</div>
+    <div class="card">
+        <h2>📈 Charts & Plots</h2>
+        <div class="plots-grid">
+            {% for plot in plots %}
+            <div class="plot-item">
+                <img src="{{ plot }}" alt="Plot">
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+ 
+    <!-- 3. Insights -->
+    <div class="sec-label">AI Insights</div>
+    <div class="card">
+        <h2>💡 Key Findings</h2>
+        <ul class="insights-list">
+            {% for insight in insights %}
+            <li>{{ insight }}</li>
+            {% endfor %}
+        </ul>
+    </div>
+ 
+    <!-- 4. Model Results -->
+    <div class="sec-label">Model Results</div>
+    <div class="card">
+        <h2>🤖 Machine Learning Results</h2>
+        <div class="model-grid">
+            <div>
+                <div class="stat-row">
+                    <span class="stat-key">Model Type</span>
+                    <span class="stat-val">{{ model_result.type }}</span>
+                </div>
+                <div class="stat-row">
+                    <span class="stat-key">Target Column</span>
+                    <span class="stat-val">{{ model_result.target }}</span>
+                </div>
+                <div class="stat-row">
+                    <span class="stat-key">Model Score</span>
+                    <span class="stat-val score">{{ model_result.score }}</span>
+                </div>
+            </div>
+            <div>
+                <div class="feat-label">Top Features</div>
+                <ul class="feat-list">
+                    {% for f, v in model_result.importance %}
+                    <li>
+                        <span class="feat-name">{{ f }}</span>
+                        <div class="feat-bar-wrap">
+                            <div class="feat-bar" style="width: {{ v }}%"></div>
+                        </div>
+                        <span class="feat-val">{{ v }}</span>
+                    </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    </div>
+ 
+    <!-- 5. Prediction -->
+    <div class="sec-label">Make Prediction</div>
+    <div class="card">
+        <h2>⚡ Predict</h2>
+        <form action="/predict" method="POST">
+            <div class="form-grid">
+                {% for feature in model_result.features %}
+                <div class="form-group">
+                    <label>{{ feature }}</label>
+                    <input type="text" name="{{ feature }}" placeholder="Enter value">
+                </div>
+                {% endfor %}
+            </div>
+            <button type="submit" class="predict-btn">Run Prediction</button>
+        </form>
+    </div>
+ 
+</div>
+ 
+</body>
+
+</html>
