@@ -188,24 +188,42 @@
  
         <div class="card">
             <form action="/analyze" method="POST" enctype="multipart/form-data">
-            
+    
                 <div class="drop-zone">
                     <input type="file" name="file" required>
                     <div class="drop-icon">📂</div>
                     <div class="drop-title">Drop your file here</div>
-                    <div class="drop-sub">or click to browse &nbsp;·&nbsp; CSV</div>
+                    <div class="drop-sub">or click to browse · CSV</div>
                     <div class="file-name" id="fname"></div>
                 </div>
- 
+
+                <!-- NEW: target column -->
+                <div style="margin-bottom:15px;">
+                    <label style="font-size:13px;font-weight:600;">Target Column</label>
+                    <input type="text" name="target" placeholder="e.g. price / label / outcome"
+                        style="width:100%;padding:10px;border:1px solid #e5eaf2;border-radius:6px;margin-top:6px;" required>
+                </div>
+
+                <!-- NEW: problem type -->
+                <div style="margin-bottom:20px;">
+                    <label style="font-size:13px;font-weight:600;">Prediction Type</label>
+                    <select name="problem_type"
+                            style="width:100%;padding:10px;border:1px solid #e5eaf2;border-radius:6px;margin-top:6px;">
+                        <option value="auto">Auto Detect (Recommended)</option>
+                        <option value="classification">Classification</option>
+                        <option value="regression">Regression</option>
+                    </select>
+                </div>
+
                 <button type="submit">Analyze Dataset</button>
- 
+
                 <div class="pills">
                     <span class="pill">✓ Auto EDA</span>
                     <span class="pill">✓ ML Model</span>
                     <span class="pill">✓ AI Insights</span>
                     <span class="pill">✓ Visualizations</span>
                 </div>
- 
+
             </form>
         </div>
     </div>

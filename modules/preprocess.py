@@ -1,8 +1,15 @@
 import pandas as pd
 
 def load_data(filepath):
-    df = pd.read_csv(filepath)
-    return df
+    encodings = ['utf-8', 'utf-8-sig', 'cp1256', 'latin-1']
+    for enc in encodings:
+        try:
+            df = pd.read_csv(filepath, encoding=enc)
+            return df
+        except (UnicodeDecodeError, Exception):
+            continue
+    raise ValueError("Could not read file with any known encoding.")
+
 
 def clean_data(df):
 

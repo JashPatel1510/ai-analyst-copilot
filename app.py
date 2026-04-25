@@ -29,32 +29,30 @@ from modules.model import train_model
 @app.route("/analyze", methods=["POST"])
 def analyze():
     file = request.files["file"]
+    target = request.form.get("target")
+    problem_type = request.form.get("problem_type")
+
     filepath = os.path.join(app.config["UPLOAD_FOLDER"], file.filename)
     file.save(filepath)
-
 
     df = load_data(filepath)
     df = clean_data(df)
 
-
     summary = generate_summary(df)
     plots = create_plots(df)
     insights = generate_insights(df)
-    model_result = train_model(df)
-    
-    
+
     global MODEL, MODEL_META
 
-    MODEL_META = train_model(df)
+    MODEL_META = train_model(df, target, problem_type)
     MODEL = MODEL_META["model"]
-    
-    
+
     return render_template(
         "dashboard.html",
         summary=summary,
         plots=plots,
         insights=insights,
-        model_result=model_result
+        model_result=MODEL_META
     )
 
 

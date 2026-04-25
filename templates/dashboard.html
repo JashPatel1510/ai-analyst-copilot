@@ -117,7 +117,19 @@
         }
  
         /* SUMMARY */
-        .summary-content { font-size: 13px; color: #374151; line-height: 1.7; }
+        .summary-content {
+            font-size: 13px;
+            color: #374151;
+            line-height: 1.7;
+            overflow-x: auto;
+        }
+
+        .summary-content table {
+            width: 100%;
+            min-width: 600px; /* prevents table from squishing too small */
+            border-collapse: collapse;
+            font-size: 13px;
+        }
         .summary-content table { width: 100%; border-collapse: collapse; font-size: 13px; }
         .summary-content th {
             background: #f3f6fb;
@@ -246,99 +258,7 @@
         }
     </style>
 
-    <!--
-    <style>
-        body {
-            font-family: Arial;
-            margin: 40px;
-            background: #f5f5f5;
-        }
-        h1 {
-            color: #333;
-        }
-        .card {
-            background: white;
-            padding: 20px;
-            margin-bottom: 20px;
-            border-radius: 10px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-        }
-        img {
-            max-width: 500px;
-            margin-bottom: 10px;
-        }
-        input {
-            padding: 8px;
-            width: 200px;
-        }
-        button {
-            padding: 10px 20px;
-            background: black;
-            color: white;
-            border: none;
-            cursor: pointer;
-        }
-    </style>
-
-    -->
 </head>
-
-<!--
-<body>
-
-<h1>AI Data Analyst Copilot</h1>
-
-<div class="card">
-    <h2>Data Summary</h2>
-    {{ summary | safe }}
-</div>
-
-<div class="card">
-    <h2>Visualizations</h2>
-    {% for plot in plots %}
-        <img src="{{ plot }}"><br>
-    {% endfor %}
-</div>
-
-<div class="card">
-    <h2>Insights</h2>
-    <ul>
-        {% for insight in insights %}
-            <li>{{ insight }}</li>
-        {% endfor %}
-    </ul>
-</div>
-
-<div class="card">
-    <h2>Model Results</h2>
-    <p><b>Type:</b> {{ model_result.type }}</p>
-    <p><b>Target:</b> {{ model_result.target }}</p>
-    <p><b>Score:</b> {{ model_result.score }}</p>
-
-    <h3>Top Features</h3>
-    <ul>
-        {% for f,v in model_result.importance %}
-            <li>{{ f }} : {{ v }}</li>
-        {% endfor %}
-    </ul>
-</div>
-
-<div class="card">
-    <h2>Make Prediction</h2>
-
-    <form action="/predict" method="POST">
-        {% for feature in model_result.features %}
-            <label>{{ feature }}</label><br>
-            <input type="text" name="{{ feature }}"><br><br>
-        {% endfor %}
-        <button type="submit">Predict</button>
-    </form>
-</div>
-
-</body>
--->
-
-
 <body>
  
 <!-- NAV -->
@@ -417,7 +337,7 @@
                         <div class="feat-bar-wrap">
                             <div class="feat-bar" style="width: {{ v }}%"></div>
                         </div>
-                        <span class="feat-val">{{ v }}</span>
+                        <span class="feat-val">{{ v * 100}}%</span>
                     </li>
                     {% endfor %}
                 </ul>
